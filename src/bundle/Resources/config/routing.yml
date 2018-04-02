@@ -1,0 +1,6 @@
+edgar.ezuifavicon.favicons:
+    path: /
+    methods: [ "GET" ]
+    defaults:
+        _controller: 'EdgarEzUIFaviconBundle:Favicon:favicons'
+

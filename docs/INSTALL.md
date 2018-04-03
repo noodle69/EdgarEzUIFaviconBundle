@@ -21,6 +21,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
+        new Edgar\EzUISitesBundle\EdgarEzUISitesBundle(),
         new Edgar\EzUIFaviconBundle\EdgarEzUIFaviconBundle(),
         // ...
     );

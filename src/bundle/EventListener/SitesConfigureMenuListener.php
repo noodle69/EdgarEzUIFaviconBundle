@@ -2,6 +2,7 @@
 
 namespace Edgar\EzUIFaviconBundle\EventListener;
 
+use eZ\Publish\API\Repository\PermissionResolver;
 use Edgar\EzUISitesBundle\EventListener\ConfigureMenuListener;
 use EzSystems\EzPlatformAdminUi\Menu\Event\ConfigureMenuEvent;
 use JMS\TranslationBundle\Model\Message;
@@ -11,6 +12,20 @@ class SitesConfigureMenuListener implements TranslationContainerInterface
 {
     const ITEM_SITES_FAVICON = 'main__sites__favicon';
 
+    /** @var PermissionResolver */
+    private $permissionResolver;
+
+    /**
+     * ConfigureMenuListener constructor.
+     *
+     * @param PermissionResolver $permissionResolver
+     */
+    public function __construct(
+        PermissionResolver $permissionResolver
+    ) {
+        $this->permissionResolver = $permissionResolver;
+    }
+
     /**
      * @param ConfigureMenuEvent $event
      */
@@ -18,13 +33,15 @@ class SitesConfigureMenuListener implements TranslationContainerInterface
     {
         $menu = $event->getMenu()->getChild(ConfigureMenuListener::ITEM_SITES);
 
-        $menu->addChild(
-            self::ITEM_SITES_FAVICON,
-            [
-                'route' => 'edgar.ezuifavicon.favicons',
-                'extras' => ['icon' => 'pin'],
-            ]
-        );
+        if ($this->permissionResolver->hasAccess('uifavicon', 'generate')) {
+            $menu->addChild(
+                self::ITEM_SITES_FAVICON,
+                [
+                    'route' => 'edgar.ezuifavicon.favicons',
+                    'extras' => ['icon' => 'pin'],
+                ]
+            );
+        }
     }
 
     /**

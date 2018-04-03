@@ -6,9 +6,14 @@
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
     </header>
     <body>
+      <trans-unit id="030d32aa1fb8e8d1253c424a87eb12847d2a14cd" resname="breadcrumb.sites">
+        <source>Sites</source>
+        <target state="new">Sites</target>
+        <note>key: breadcrumb.sites</note>
+      </trans-unit>
       <trans-unit id="9729cd82169fc695f5e7756908c491a494ad79d5" resname="main__sites__favicon">
         <source>Favicons</source>
-        <target state="new">Favicons</target>
+        <target>Favicons</target>
         <note>key: main__sites__favicon</note>
       </trans-unit>
     </body>

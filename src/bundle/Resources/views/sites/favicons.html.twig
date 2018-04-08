@@ -1,5 +1,7 @@
 {% extends 'EzPlatformAdminUiBundle::layout.html.twig' %}
 
+{% form_theme form '@EzPlatformAdminUi/form_fields.html.twig'  %}
+
 {% trans_default_domain 'edgarezuifavicon' %}
 
 {% block body_class %}ez-info-view{% endblock %}
@@ -21,6 +23,21 @@
 {% block content %}
 
     <section class="container mt-4">
+        {{ form_start(form, { 'action': path('edgar.ezuiinfobundles.list') }) }}
+
+        <div class="input-group">
+            {{ form_widget(form.site) }}
+            {{ form_widget(form.image) }}
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary">
+                <svg class="ez-icon ez-icon-search-button">
+                    <use xlink:href="{{ asset('bundles/ezplatformadminui/img/ez-icons.svg') }}#search"></use>
+                </svg>
+                    {{ 'dashboard.perform'|trans|desc('Search') }}</button>
+            </span>
+        </div>
+
+        {{ form_end(form) }}
 
     </section>
 

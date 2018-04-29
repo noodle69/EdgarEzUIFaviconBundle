@@ -10,4 +10,13 @@ services:
     Edgar\EzUIFaviconBundle\EventListener\SitesConfigureMenuListener:
         public: true
         tags:
-          - { name: kernel.event_listener, event: ezplatform_admin_ui.menu_configure.main_menu, method: onMenuConfigure }
+            - { name: kernel.event_listener, event: ezplatform_admin_ui.menu_configure.main_menu, method: onMenuConfigure }
+
+    Edgar\EzUIFavicon\Generator\Generator:
+        public: true
+        arguments:
+            $apiKey: $api_key;edgar_ez_ui_favicon$
+            $faviconDesign: $favicon_design;edgar_ez_ui_favicon$
+            $versioning: $versioning;edgar_ez_ui_favicon$
+            $baseurl: $baseurl;edgar_ez_ui_favicon$
+            $uri: $uri;edgar_ez_ui_favicon$

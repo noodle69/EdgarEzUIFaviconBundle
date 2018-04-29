@@ -1,0 +1,6 @@
+parameters:
+    edgar_ez_ui_favicon.default.api_key: ~
+    edgar_ez_ui_favicon.default.favicon_design: []
+    edgar_ez_ui_favicon.default.versioning: false
+    edgar_ez_ui_favicon.default.baseurl: https://realfavicongenerator.net
+    edgar_ez_ui_favicon.default.uri: /api/favicon

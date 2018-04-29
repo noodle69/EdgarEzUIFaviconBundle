@@ -1,0 +1,105 @@
+<?php
+
+namespace Edgar\EzUIFaviconBundle\DependencyInjection;
+
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use eZ\Bundle\EzPublishCoreBundle\DependencyInjection\Configuration\SiteAccessAware\Configuration as SiteAccessConfiguration;
+
+class Configuration extends SiteAccessConfiguration
+{
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('edgar_ez_ui_favicon');
+
+        $systemNode = $this->generateScopeBaseNode($rootNode);
+        $systemNode
+            ->scalarNode('api_key')->isRequired()->end()
+            ->arrayNode('favicon_design')
+                ->children()
+                    ->arrayNode('desktop_browser')
+                        ->children()->end()
+                    ->end()
+                    ->arrayNode('ios')
+                        ->children()
+                            ->scalarNode('picture_aspect')->end()
+                            ->integerNode('margin')->end()
+                            ->scalarNode('background_color')->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('windows')
+                        ->children()
+                            ->scalarNode('picture_aspect')->end()
+                            ->scalarNode('background_color')->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('firefox_app')
+                        ->children()
+                            ->scalarNode('picture_aspect')->end()
+                            ->booleanNode('keep_picture_in_circle')->end()
+                            ->integerNode('circle_inner_margin')->end()
+                            ->scalarNode('background_color')->end()
+                            ->arrayNode('manifest')
+                                ->children()
+                                    ->scalarNode('app_name')->end()
+                                    ->scalarNode('app_description')->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('android_chrome')
+                        ->children()
+                            ->scalarNode('picture_aspect')->end()
+                            ->scalarNode('theme_color')->end()
+                            ->arrayNode('manifest')
+                                ->children()
+                                    ->scalarNode('name')->end()
+                                    ->scalarNode('display')->end()
+                                    ->scalarNode('orientation')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('safari_pinned_tab')
+                    ->children()
+                        ->scalarNode('picture_aspect')->end()
+                        ->integerNode('threshold')->end()
+                        ->scalarNode('theme_color')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('coast')
+                    ->children()
+                        ->scalarNode('picture_aspect')->end()
+                        ->scalarNode('background_color')->end()
+                        ->integerNode('margin')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('open_graph')
+                    ->children()
+                        ->scalarNode('picture_aspect')->end()
+                        ->scalarNode('background_color')->end()
+                        ->integerNode('margin')->end()
+                        ->scalarNode('ratio')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('yandex_browser')
+                    ->children()
+                        ->scalarNode('background_color')->end()
+                        ->arrayNode('manifest')
+                            ->children()
+                                ->scalarNode('show_title')->end()
+                                ->scalarNode('version')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()
+        ->scalarNode('baseurl')->end()
+        ->scalarNode('uri')->end()
+        ->booleanNode('versioning')->end()
+        ;
+
+        return $treeBuilder;
+    }
+}

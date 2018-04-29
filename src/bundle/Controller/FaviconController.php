@@ -5,6 +5,7 @@ namespace Edgar\EzUIFaviconBundle\Controller;
 use Edgar\EzUIFavicon\Form\Data\FaviconData;
 use Edgar\EzUIFavicon\Form\Factory\FormFactory;
 use Edgar\EzUIFavicon\Form\SubmitHandler;
+use Edgar\EzUIFavicon\Generator\Generator;
 use EzSystems\EzPlatformAdminUi\Notification\NotificationHandlerInterface;
 use EzSystems\EzPlatformAdminUiBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,18 +30,23 @@ class FaviconController extends Controller
     /** @var TranslatorInterface  */
     protected $translator;
 
+    /** @var Generator $generator */
+    protected $generator;
+
     public function __construct(
         FormFactory $formFactory,
         SubmitHandler $submitHandler,
         TokenStorage $tokenStorage,
         NotificationHandlerInterface $notificationHandler,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        Generator $generator
     ) {
         $this->formFactory = $formFactory;
         $this->submitHandler = $submitHandler;
         $this->tokenStorage = $tokenStorage;
         $this->notificationHandler = $notificationHandler;
         $this->translator = $translator;
+        $this->generator = $generator;
     }
 
     public function faviconsAction(Request $request): Response
@@ -49,6 +55,22 @@ class FaviconController extends Controller
             new FaviconData()
         );
         $faviconType->handleRequest($request);
+
+        if ($faviconType->isSubmitted() && $faviconType->isValid()) {
+            $result = $this->submitHandler->handle($faviconType, function (FaviconData $data) use ($faviconType) {
+                $rootDir = $this->container->getParameter('kernel.root_dir');
+                $varDir = $this->container->getParameter('ezsettings.admin_group.var_dir');
+                $destFileFolder = $rootDir . '/../web/' . $varDir . '/favicons/' . $data->getSite()->getIdentifier();
+
+                $data->getFile()->move($destFileFolder, $data->getFile()->getClientOriginalName());
+                $response = $this->generator->callAPI($destFileFolder . '/' . $data->getFile()->getClientOriginalName(), '/');
+                $this->generator->decodeResponse($response, $destFileFolder);
+            });
+
+            if ($result instanceof Response) {
+                return $result;
+            }
+        }
 
         return $this->render('@EdgarEzUIFavicon/sites/favicons.html.twig', [
             'form' => $faviconType->createView(),

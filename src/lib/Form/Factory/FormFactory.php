@@ -32,8 +32,8 @@ class FormFactory
             FaviconType::class,
             $data,
             [
-                'method' => Request::METHOD_GET,
-                'csrf_protection' => false,
+                'method' => Request::METHOD_POST,
+                'csrf_protection' => true,
             ]
         );
     }

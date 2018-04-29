@@ -3,20 +3,22 @@
 namespace Edgar\EzUIFavicon\Form\Data;
 
 use Edgar\EzUISites\Data\SiteData;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FaviconData
 {
-    /** @var SiteData $site */
+    /** @var null|SiteData $site */
     private $site;
 
-    private $image;
+    /** @var null|UploadedFile $file */
+    private $file;
 
     public function __construct(
         ?SiteData $site = null,
-        $image = null
+        ?UploadedFile $file = null
     ) {
         $this->site = $site;
-        $this->image = $image;
+        $this->file = $file;
     }
 
     public function setSite(?SiteData $site): self
@@ -26,9 +28,9 @@ class FaviconData
         return $this;
     }
 
-    public function setImage($image): self
+    public function setFile(UploadedFile $file): self
     {
-        $this->image  = $image;
+        $this->file  = $file;
 
         return $this;
     }
@@ -38,8 +40,8 @@ class FaviconData
         return $this->site;
     }
 
-    public function getImage()
+    public function getFile(): ?UploadedFile
     {
-        return $this->image;
+        return $this->file;
     }
 }

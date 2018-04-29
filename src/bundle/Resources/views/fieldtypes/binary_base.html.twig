@@ -1,0 +1,83 @@
+{% block binary_base_row %}
+    {% set file_is_empty = true %}
+    {% set attr = attr|merge({'data-max-file-size': max_file_size}) %}
+    {% set wrapper_attr = wrapper_attr|default({})|merge({'class': (wrapper_attr.class|default('') ~ ' ez-field-edit--with-preview')|trim}) %}
+    {% set preview_attr = preview_attr|default({})|merge({'class': (preview_attr.class|default('') ~ ' ez-field-edit__preview')|trim}) %}
+    {% set widget_wrapper_attr = widget_wrapper_attr|default({})|merge({'class': (widget_wrapper_attr.class|default('') ~ ' ez-field-edit__data')|trim}) %}
+    {% if file_is_empty %}
+        {% set preview_attr = preview_attr|default({})|merge({'hidden': 'hidden'}) %}
+    {% else %}
+        {% set widget_wrapper_attr = widget_wrapper_attr|merge({'hidden': 'hidden'}) %}
+    {% endif %}
+
+    {% set widget_container_block = block('binary_base_widget_container') %}
+
+    {{ block('form_row_fieldtype') }}
+{% endblock %}
+
+{% block attributes %}{% endblock %}
+
+{% block form_row_fieldtype %}
+    <div class="ez-field-edit--with-preview ez-field-edit ez-field-edit--ezimage">
+        {{ widget_container_block|raw }}
+    </div>
+{% endblock %}
+
+{% block ezimage_preview %}
+    <div class="ez-field-edit-preview">
+        <div class="ez-field-edit-preview__visual">
+            <div class="ez-field-edit-preview__media-wrapper">
+                <img
+                        class="ez-field-edit-preview__media"
+                        src=""
+                        alt="" />
+            </div>
+            <div class="ez-field-edit-preview__details">
+                <span class="ez-field-edit-preview__file-name"></span>
+                <span class="ez-field-edit-preview__file-size"></span>
+            </div>
+            <div class="ez-field-edit-preview__image-alt">
+                <input type="text" hidden="hidden" class="ez-data-source__input form-control">
+            </div>
+        </div>
+        <div class="ez-field-edit-preview__actions">
+            <button class="ez-field-edit-preview__action--remove">
+                <svg class="ez-icon">
+                    <use xlink:href="/bundles/ezplatformadminui/img/ez-icons.svg#trash"></use>
+                </svg>
+            </button>
+            <a class="ez-field-edit-preview__action--preview" href="" target="_blank">
+                <svg class="ez-icon">
+                    <use xlink:href="/bundles/ezplatformadminui/img/ez-icons.svg#open-newtab"></use>
+                </svg>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block binary_base_widget_container %}
+    <div class="ez-field-edit__preview" hidden="hidden">
+        {{ block(preview_block_name) }}
+    </div>
+    <div class="ez-field-edit__data">
+        <div class="ez-data-source">
+            {{ block('binary_base_widget') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block binary_base_widget %}
+    <div class="ez-data-source__message--main">{{ 'fieldtype.binary_base.drag_drop'|trans|desc('Drag and drop your files on browser window or upload them') }}</div>
+    <div class="ez-data-source__btn-add">
+        <svg class="ez-icon">
+            <use xlink:href="/bundles/ezplatformadminui/img/ez-icons.svg#upload"></use>
+        </svg>
+        <span class="ez-data-source__btn-label">{{ 'fieldtype.binary_base.upload_file'|trans|desc('Upload file') }}</span>
+    </div>
+    <div class="ez-field-edit__label-wrapper" hidden="hidden">
+        <legend class="ez-field-edit__label col-form-label">Image</legend>
+
+    </div>
+    {{ form_widget(form.file) }}
+    <input type="checkbox" class="ez-field-edit__option--remove-media" hidden="hidden" />
+{% endblock %}

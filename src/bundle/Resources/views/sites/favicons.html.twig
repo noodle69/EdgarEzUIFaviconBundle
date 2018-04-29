@@ -4,6 +4,9 @@
 
 {% trans_default_domain 'edgarezuifavicon' %}
 
+{% use '@EzPlatformAdminUi/fieldtypes/edit/binary_base.html.twig' %}
+{% use '@EdgarEzUIFavicon/fieldtypes/binary_base.html.twig' %}
+
 {% block body_class %}ez-info-view{% endblock %}
 
 {% block breadcrumbs %}
@@ -23,22 +26,36 @@
 {% block content %}
 
     <section class="container mt-4">
-        {{ form_start(form, { 'action': path('edgar.ezuiinfobundles.list') }) }}
+        {{ form_start(form, { 'action': path('edgar.ezuifavicon.favicons') }) }}
 
-        <div class="input-group">
             {{ form_widget(form.site) }}
-            {{ form_widget(form.image) }}
+
+            {%- block ezimage_row -%}
+                {% set preview_block_name = 'ezimage_preview' %}
+                {% set max_file_size = 1024 %}
+                {% set attr = {'accept': 'image/*'} %}
+                {{ block('binary_base_row') }}
+            {%- endblock -%}
+
             <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary">
-                <svg class="ez-icon ez-icon-search-button">
-                    <use xlink:href="{{ asset('bundles/ezplatformadminui/img/ez-icons.svg') }}#search"></use>
                 </svg>
-                    {{ 'dashboard.perform'|trans|desc('Search') }}</button>
+                    {{ 'dashboard.perform'|trans|desc('Generate') }}</button>
             </span>
-        </div>
 
         {{ form_end(form) }}
 
     </section>
 
+    {%  javascripts
+        '@EzPlatformAdminUiBundle/Resources/public/js/scripts/fieldType/base/base-field.js'
+        '@EzPlatformAdminUiBundle/Resources/public/js/scripts/fieldType/base/base-file-field.js'
+        '@EzPlatformAdminUiBundle/Resources/public/js/scripts/fieldType/base/base-preview-field.js'
+        '@EzPlatformAdminUiBundle/Resources/public/js/scripts/fieldType/*'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
 {% endblock %}
+
+

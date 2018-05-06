@@ -67,19 +67,19 @@ class FaviconController extends Controller
                     $data->getFile()->move($destFileFolder, $data->getFile()->getClientOriginalName());
                     $response = $this->generator->callAPI($destFileFolder . '/' . $data->getFile()->getClientOriginalName(), '/');
                     $this->generator->decodeResponse($response, $destFileFolder, $varDir);
+
+                    $this->notificationHandler->success(
+                        $this->translator->trans(
+                            'edgar.ezuifavicon.favicon.generate',
+                            [],
+                            'edgarezuifavicon'
+                        )
+                    );
                 } catch (FaviconException $e) {
                     $this->notificationHandler->error(
                         $e->getMessage()
                     );
                 }
-
-                $this->notificationHandler->success(
-                    $this->translator->trans(
-                        'edgar.ezuifavicon.favicon.generate',
-                        [],
-                        'edgarezuifavicon'
-                    )
-                );
 
                 return $this->render('@EdgarEzUIFavicon/sites/favicons.html.twig', [
                     'form' => $faviconType->createView(),

@@ -59,12 +59,12 @@ class FaviconController extends Controller
         if ($faviconType->isSubmitted() && $faviconType->isValid()) {
             $result = $this->submitHandler->handle($faviconType, function (FaviconData $data) use ($faviconType) {
                 $rootDir = $this->container->getParameter('kernel.root_dir');
-                $varDir = $this->container->getParameter('ezsettings.admin_group.var_dir');
-                $destFileFolder = $rootDir . '/../web/' . $varDir . '/favicons/' . $data->getSite()->getIdentifier();
+                $varDir = $this->container->getParameter('ezsettings.admin_group.var_dir') . '/storage/images/' . Generator::FAVICONS_DIR . '/' . $data->getSite()->getIdentifier();
+                $destFileFolder = $rootDir . '/../web/' . $varDir;
 
                 $data->getFile()->move($destFileFolder, $data->getFile()->getClientOriginalName());
                 $response = $this->generator->callAPI($destFileFolder . '/' . $data->getFile()->getClientOriginalName(), '/');
-                $this->generator->decodeResponse($response, $destFileFolder);
+                $this->generator->decodeResponse($response, $destFileFolder, $varDir);
             });
 
             if ($result instanceof Response) {

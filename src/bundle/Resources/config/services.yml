@@ -20,3 +20,11 @@ services:
             $versioning: $versioning;edgar_ez_ui_favicon$
             $baseurl: $baseurl;edgar_ez_ui_favicon$
             $uri: $uri;edgar_ez_ui_favicon$
+
+    Edgar\EzUIFaviconBundle\Templating\Twig\FaviconsExtension:
+        calls:
+            - [ setKernelRootDir, [ "%kernel.root_dir%" ] ]
+            - [ setVarDir, [ "$var_dir$" ] ]
+            - [ setStorageDir, [ "$storage_dir$" ] ]
+        tags:
+            - { name: twig.extension }

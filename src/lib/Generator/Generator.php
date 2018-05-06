@@ -12,6 +12,7 @@ class Generator
 {
     const STATUS_200 = 200;
     const STATUSSUCCESS = 'success';
+    const FAVICONS_DIR = '_favicons';
 
     /**
      * @var string RealFaviconGenerator api key
@@ -38,6 +39,14 @@ class Generator
      */
     private $uri;
 
+    /**
+     * Generator constructor.
+     * @param string $apiKey
+     * @param array $faviconDesign
+     * @param bool $versioning
+     * @param string $baseurl
+     * @param string $uri
+     */
     public function __construct(
         string $apiKey,
         array $faviconDesign,
@@ -60,12 +69,12 @@ class Generator
      */
     public function callAPI($picturePath, $imagePath): Response
     {
-        $parameters = array(
+        $parameters = [
             'master_picture_path' => $picturePath,
-            'image_path'          => $imagePath,
-            'favicon_design'      => $this->faviconDesign,
-            'versioning'          => $this->versioning
-        );
+            'image_path' => $imagePath,
+            'favicon_design' => $this->faviconDesign,
+            'versioning' => $this->versioning,
+        ];
         $queryData = new QueryData($this->apiKey, $parameters);
 
         try {
@@ -83,7 +92,7 @@ class Generator
     protected function getResponse(QueryData $queryData): Response
     {
         $request = new Request('POST', $this->baseurl . $this->uri, [], $queryData->__toString());
-        $client   = new Client();
+        $client = new Client();
         try {
             $response = $client->send($request);
         } catch (GuzzleException $e) {
@@ -100,14 +109,15 @@ class Generator
     /**
      * @param Response $response
      * @param string $fileLocation
+     * @param string $varDir
      * @throws FaviconException
      */
-    public function decodeResponse(Response $response, string $fileLocation)
+    public function decodeResponse(Response $response, string $fileLocation, string $varDir)
     {
         $body = json_decode($response->getBody());
 
         if (isset($body->favicon_generation_result->result->status)
-            && $body->favicon_generation_result->result->status == self::STATUSSUCCESS
+            && (int)$body->favicon_generation_result->result->status == self::STATUSSUCCESS
         ) {
             $packageUrl = $body->favicon_generation_result->favicon->package_url;
             $content = file_get_contents($packageUrl);
@@ -121,11 +131,11 @@ class Generator
             if ($fp) {
                 fwrite($fp, $content);
                 $this->unpackIcons($packageFile, $fileLocation);
-                $this->createView($body, $fileLocation);
+                $this->createView($body, $fileLocation, $varDir);
             }
+        } else {
+            throw new FaviconException('Bad API Response');
         }
-
-        throw new FaviconException('Bad API Response');
     }
 
     /**
@@ -141,27 +151,32 @@ class Generator
         }
     }
 
-    protected function createView($content, string $fileLocation)
+    /**
+     * @param $content
+     * @param string $fileLocation
+     * @param string $varDir
+     */
+    protected function createView($content, string $fileLocation, string $varDir)
     {
         $htmlContent = $content->favicon_generation_result->favicon->html_code;
         $htmlContent = explode("\n", $htmlContent);
-        $pattern1     = '/href="([^"]*)"/';
-        $pattern2     = '/content="([^"]*)"/';
+        $pattern1 = '/href="([^"]*)"/';
+        $pattern2 = '/content="([^"]*)"/';
         $replacement1 = 'href="{{ asset(\'%s\') }}"';
         $replacement2 = 'content="{{ asset(\'%s\') }}"';
         $htmlResult = array();
         foreach ($htmlContent as $line) {
             $replacement = false;
-            $pattern     = false;
+            $pattern = false;
             preg_match($pattern1, $line, $matches);
             if (isset($matches[1])) {
                 $replacement = $replacement1;
-                $pattern     = $pattern1;
+                $pattern = $pattern1;
             } else {
                 preg_match($pattern2, $line, $matches);
                 if (isset($matches[1])) {
                     $replacement = $replacement2;
-                    $pattern     = $pattern2;
+                    $pattern = $pattern2;
                 } else {
                     $htmlResult[] = $line;
                 }
@@ -169,7 +184,8 @@ class Generator
             if ($replacement) {
                 $imageInfo = pathinfo($matches[1]);
                 if (isset($imageInfo['extension'])) {
-                    $htmlResult[] = preg_replace($pattern, sprintf($replacement, $matches[1], $line), $line);
+                    $argReplacement = $varDir . $matches[1];
+                    $htmlResult[] = preg_replace($pattern, sprintf($replacement, $argReplacement, $line), $line);
                 } else {
                     $htmlResult[] = $line;
                 }

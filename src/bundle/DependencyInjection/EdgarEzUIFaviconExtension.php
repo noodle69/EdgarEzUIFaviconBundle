@@ -2,6 +2,7 @@
 
 namespace Edgar\EzUIFaviconBundle\DependencyInjection;
 
+use Edgar\EzUIFavicon\Generator\Generator;
 use eZ\Bundle\EzPublishCoreBundle\DependencyInjection\Configuration\SiteAccessAware\ConfigurationProcessor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;

@@ -6,6 +6,7 @@ use Edgar\EzUIFavicon\Form\Data\FaviconData;
 use Edgar\EzUIFavicon\Form\Factory\FormFactory;
 use Edgar\EzUIFavicon\Form\SubmitHandler;
 use Edgar\EzUIFavicon\Generator\Generator;
+use Edgar\EzUIFaviconBundle\Exception\FaviconException;
 use EzSystems\EzPlatformAdminUi\Notification\NotificationHandlerInterface;
 use EzSystems\EzPlatformAdminUiBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,9 +63,27 @@ class FaviconController extends Controller
                 $varDir = $this->container->getParameter('ezsettings.admin_group.var_dir') . '/storage/images/' . Generator::FAVICONS_DIR . '/' . $data->getSite()->getIdentifier();
                 $destFileFolder = $rootDir . '/../web/' . $varDir;
 
-                $data->getFile()->move($destFileFolder, $data->getFile()->getClientOriginalName());
-                $response = $this->generator->callAPI($destFileFolder . '/' . $data->getFile()->getClientOriginalName(), '/');
-                $this->generator->decodeResponse($response, $destFileFolder, $varDir);
+                try {
+                    $data->getFile()->move($destFileFolder, $data->getFile()->getClientOriginalName());
+                    $response = $this->generator->callAPI($destFileFolder . '/' . $data->getFile()->getClientOriginalName(), '/');
+                    $this->generator->decodeResponse($response, $destFileFolder, $varDir);
+                } catch (FaviconException $e) {
+                    $this->notificationHandler->error(
+                        $e->getMessage()
+                    );
+                }
+
+                $this->notificationHandler->success(
+                    $this->translator->trans(
+                        'edgar.ezuifavicon.favicon.generate',
+                        [],
+                        'edgarezuifavicon'
+                    )
+                );
+
+                return $this->render('@EdgarEzUIFavicon/sites/favicons.html.twig', [
+                    'form' => $faviconType->createView(),
+                ]);
             });
 
             if ($result instanceof Response) {

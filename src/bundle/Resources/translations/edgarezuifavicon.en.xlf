@@ -6,6 +6,16 @@
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
     </header>
     <body>
+      <trans-unit id="9c81eb119d053e37dc2e2d30058b4f66134eb6a8" resname="dashboard.perform">
+        <source>Generate</source>
+        <target state="new">Generate</target>
+        <note>key: dashboard.perform</note>
+      </trans-unit>
+      <trans-unit id="73a9ba3dda1e5e49dd9f8635c0d8d96fcdf0bc7e" resname="edgar.ezuifavicon.favicon.generate">
+        <source>edgar.ezuifavicon.favicon.generate</source>
+        <target state="new">New favicons generated</target>
+        <note>key: edgar.ezuifavicon.favicon.generate</note>
+      </trans-unit>
       <trans-unit id="330db971ade18d979bd768f8ee802a94f1511d19" resname="favicons.view">
         <source>Favicons</source>
         <target>Favicons</target>

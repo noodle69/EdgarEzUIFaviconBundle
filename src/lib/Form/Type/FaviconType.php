@@ -2,6 +2,7 @@
 
 namespace Edgar\EzUIFavicon\Form\Type;
 
+use Edgar\EzUISites\Form\Constraints\SiteConstraint;
 use Edgar\EzUISites\Form\Type\FilterSitesType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -23,6 +24,7 @@ class FaviconType extends AbstractType
                     'expanded' => false,
                     'required' => false,
                     'placeholder' => 'All sites',
+                    'constraints' => [new SiteConstraint()],
                 ]
             )->add(
                 'file',

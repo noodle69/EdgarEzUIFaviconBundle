@@ -43,14 +43,11 @@ edgar.ezuifavicon:
 ### Configure bundle
 
 ```yaml
-# ezpublish/config/config.yml
-edgar_ez_favicon:
+# app/config/ezplatform.yml
+edgar_ez_ui_favicon:
     system:
-        acme_group: #for each siteaccess
+        admin_group:
             api_key: ... #required
-            master_picture: @AcmeBundle/Resources/public/images/acme/photo.jpg #required
-            package_dest: @AcmeBundle/Resources/public/images/acme/favicons/ #required
-            favicons_view: @AcmeBundle/Resources/views/acme/favicons.html.twig #required
             versioning: true
             favicon_design:
                 desktop_browser: []
@@ -94,8 +91,6 @@ edgar_ez_favicon:
                     manifest:
                         show_title: true
                         version: "1.0"
-        acme: #or/and especially for acme siteaccess
-            # ... same as before
 ```
 
 * api_key : visit RealFaviconGenerator website to obtain your own API Key for Non-interactive mode

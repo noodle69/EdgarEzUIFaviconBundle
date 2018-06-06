@@ -35,7 +35,7 @@ Add to your global configuration app/config/routing.yml
 ```yaml
 edgar.ezuifavicon:
     resource: '@EdgarEzUIFaviconBundle/Resources/config/routing.yml'
-    prefix: /favicons
+    prefix: /_favicons
     defaults:
         siteaccess_group_whitelist: 'admin_group'
 ```

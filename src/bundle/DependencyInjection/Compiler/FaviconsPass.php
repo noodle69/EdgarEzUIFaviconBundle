@@ -12,7 +12,7 @@ class FaviconsPass implements CompilerPassInterface
     {
         $faviconsViewPath = $container->getParameter('kernel.root_dir') . '/../web/' . $container->getParameter('ezsettings.admin_group.var_dir') . '/' . $container->getParameter('ezsettings.default.storage_dir') . '/images/' . Generator::FAVICONS_DIR;
         if (!is_dir($faviconsViewPath)) {
-            mkdir($faviconsViewPath, '0777', true);
+            mkdir($faviconsViewPath, 0777, true);
         }
 
         $container->getDefinition('twig.loader.filesystem')->addMethodCall('addPath', [$faviconsViewPath]);
